@@ -1,4 +1,17 @@
 {
+    "name": "matronique/test-webservice",
+    "type": "library",
+    "description": "This application can test web service from cli",
+    "keywords": ["webservice", "tests", "soap"],
+    "homepage": "https://github.com/macintoshplus/TestWebService",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jean-Baptiste Nahan",
+            "email": "jbnahan@gmail.com",
+            "homepage": "http://nahan.fr"
+        }
+    ],
 	"autoload": {
         "psr-4": {
             "Mactronique\\TestWs\\": ""

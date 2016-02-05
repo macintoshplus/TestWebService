@@ -17,6 +17,8 @@
             "Mactronique\\TestWs\\": ""
         }
     },
+    "bin": ["TestWebService"],
+    
     "require": {
         "symfony/console": "^3.0",
 		"symfony/yaml": "^3.0",

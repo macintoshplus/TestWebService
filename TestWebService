@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+// TestWebService.php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Mactronique\TestWs\Command\TestUnitCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('Test WebService', '0.1');
+$application->add(new TestUnitCommand());
+$application->run();

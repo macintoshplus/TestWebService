@@ -1,0 +1,13 @@
+{
+	"autoload": {
+        "psr-4": {
+            "Mactronique\\TestWs\\": ""
+        }
+    },
+    "require": {
+        "symfony/console": "^3.0",
+		"symfony/yaml": "^3.0",
+		"symfony/config": "^3.0",
+		"symfony/var-dumper": "^3.0"
+    }
+}

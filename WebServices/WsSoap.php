@@ -40,7 +40,7 @@ class WsSoap implements TestWebServicesInterface
 
     private function testEnv(array $functions, $url, OutputInterface $output)
     {
-        $soapClient = new \SoapClient($url, array('cache_wsdl' => 0, 'trace' => 1, 'soap_version' => SOAP_1_1));
+        $soapClient = new \SoapClient($url, array('cache_wsdl' => 0, 'trace' => 1, 'soap_version' => SOAP_1_1, 'user_agent'=> 'Test Ws Client From PHP '.PHP_VERSION));
 
         foreach ($functions as $function => $parameters) {
             $output->writeln('Test de la fonction soap <comment>'.$function.'</comment>');

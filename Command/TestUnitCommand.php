@@ -69,7 +69,7 @@ class TestUnitCommand extends Command
                 if (!$classTest instanceof \Mactronique\TestWs\WebServices\TestWebServicesInterface) {
                     throw new \Exception("La classe de test n'implemente pas l'nterface 'Mactronique\TestWs\WebServices\TestWebServicesInterface'", 1);
                 }
-                $classTest->runTests($output);
+                $results = $classTest->runTests($output);
             } catch (\Exception $e) {
                 $this->getApplication()->renderException($e, $output);
                 continue;

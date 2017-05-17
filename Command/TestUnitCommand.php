@@ -70,12 +70,17 @@ class TestUnitCommand extends Command
                     throw new \Exception("La classe de test n'implemente pas l'nterface 'Mactronique\TestWs\WebServices\TestWebServicesInterface'", 1);
                 }
                 $results = $classTest->runTests($output);
+                var_dump($results);
+                if (isset($infos['storage'])) {
+                    $storageManager = new \Mactronique\TestWs\Persistance\StorageManager($infos['storage']);
+                    $storageManager->save($results, $name);
+                }
             } catch (\Exception $e) {
                 $this->getApplication()->renderException($e, $output);
                 continue;
             }
         }
-        $output->writeln('Fin !');
+        $output->writeln('Fin ! '.date('c'));
     }
 
     private function getWebServiceToTest($name = null)

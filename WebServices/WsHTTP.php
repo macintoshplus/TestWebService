@@ -11,6 +11,8 @@ namespace Mactronique\TestWs\WebServices;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
+use Mactronique\TestWs\Model\WsQueryResult;
 
 class WsHTTP implements TestWebServicesInterface
 {
@@ -38,42 +40,44 @@ class WsHTTP implements TestWebServicesInterface
      */
     public function runTests(OutputInterface $output)
     {
-        $results = [];
-        foreach ($this->config['env'] as $env => $url) {
-            $output->writeln('Test de l\'environnement <info>'.$env.'</info>');
-            $start = microtime(true);
-            $result = $this->testEnv($this->config['datas'], $url, $output);
-            $end = microtime(true);
-            $duration = $end - $start;
-            $result['time_start'] = $start;
-            $result['time_end'] = $end;
-            $result['time_duration'] = $duration;
-            $output->writeln('Durée de la requête : <info>'.number_format($duration, 3, ",", " ")."</info>");
-            $results[$env] = $result;
-        }
-        return $results;
-    }
+        $requests = [];
+        $statsAll = [];
+        $statsData = [];
+        $client = new Client(['http_errors' => false, 'timeout' => 12.0]);
+        $output->writeln("Start : ".date('c'));
+        $env = $this->config['env'];
+        $dataRequest = $this->config['datas'];
+        $responseData = $this->config['response'];
+        $promises = (function () use ($env, $dataRequest, &$statsAll, $client, $responseData, &$statsData) {
+            foreach ($env as $key => $url) {
+                $statsAll[$url] = ['started_at'=>microtime(true)];
+                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData) {
+                    //echo $stats->getEffectiveUri()." => ".$url."\n";
+                    //echo "Transfert time : " . $stats->getTransferTime()."\n";
+                    //var_dump($stats->getHandlerStats());
+                    if (isset($statsAll[$url]) && is_array($statsAll[$url])) {
+                        $statsArray = array_merge($statsAll[$url], $stats->getHandlerStats());
+                    } else {
+                        $statsArray = $stats->getHandlerStats();
+                    }
+                    $statsAll[$url] = $statsArray;
+                    $statsData[$url] = new WsQueryResult($statsArray, $responseData, $stats->getResponse());
+                },]);
+            }
+        })();
 
-    private function testEnv(array $datas, $url, OutputInterface $output)
-    {
-        $result = ['code_http'=> null, 'mime'=> null, 'server_header'=>null];
-        $client = new Client(['http_errors' => false]);
-        $response = $client->request($datas['method'], $url, ['headers' => ['Content-Type' => $datas['mime']], 'body' => $datas['datas']]);
-        if ($response->getStatusCode() != $this->config['response']['http_code']) {
-            $output->writeln('<error>Code réponse incorrect : '.$response->getStatusCode().'</error>');
-        }
-        $result['code_http'] = $response->getStatusCode();
-        
-        if (!$response->hasHeader('Content-Type') || $response->getHeader('Content-Type')[0] != $this->config['response']['mime']) {
-            $output->writeln('<error>Content type absent ou incorrect : '.($response->getHeader('Content-Type')[0]).'</error>');
-        }
-        $result['mime'] = $response->getHeader('Content-Type')[0];
-        if ($response->hasHeader($this->config['response']['server_header'])) {
-            $output->writeln('Valeur entête '.$this->config['response']['server_header'].' : <info>'.($response->getHeader($this->config['response']['server_header'])[0]).'</info>');
-            $result['server_header'] = $response->getHeader($this->config['response']['server_header'])[0];
-        } else {
-            $output->writeln('<error>Header '.($this->config['response']['server_header']).' introuvable</error>');
-        }
-        return $result;
+        //$output->writeln("All query launch : ".date('c'));
+
+        //$statsData = [];
+        $responseData = $this->config['response'];
+        (new \GuzzleHttp\Promise\EachPromise($promises, [
+            'concurrency' => 10
+        ]))->promise()->wait();
+        //$output->writeln("All query requested : ".date('c'));
+
+
+        //$output->writeln("All response worked : ".date('c'));
+
+        return $statsData;
     }
 }

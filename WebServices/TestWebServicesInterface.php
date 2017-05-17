@@ -17,6 +17,7 @@ interface TestWebServicesInterface
 
     /**
      * @throws \Exception si une erreur intervient.
+     * @return array
      */
     public function runTests(OutputInterface $output);
 }

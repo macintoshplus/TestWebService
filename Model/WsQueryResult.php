@@ -37,7 +37,7 @@ class WsQueryResult
      */
     public function getServerName()
     {
-        $header = ($this->response === null)? []:$this->response->getHeader($this->responseConfig['server_header']);
+        $header = ($this->response === null)? ['']:$this->response->getHeader($this->responseConfig['server_header']);
         return (empty($header)) ? '':$header[0];
     }
 

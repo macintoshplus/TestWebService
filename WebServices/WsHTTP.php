@@ -12,13 +12,15 @@ namespace Mactronique\TestWs\WebServices;
 use Symfony\Component\Console\Output\OutputInterface;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
-use Mactronique\TestWs\Model\WsQueryResult;
+use Mactronique\TestWs\Factory\ResultFactory;
 
 class WsHTTP implements TestWebServicesInterface
 {
     private $config;
 
-    public function __construct(array $config)
+    private $factory;
+
+    public function __construct(array $config, ResultFactory $factory)
     {
         $this->config = $config;
         if (!array_key_exists('env', $this->config) || !is_array($this->config['env']) || 0 == count($this->config['env'])) {
@@ -32,6 +34,7 @@ class WsHTTP implements TestWebServicesInterface
         if (!array_key_exists('response', $this->config) || !is_array($this->config['response']) || 0 == count($this->config['response'])) {
             throw new \Exception('Les données de la réponse ne sont pas définies', 1);
         }
+        $this->factory = $factory;
     }
 
     /**
@@ -43,15 +46,16 @@ class WsHTTP implements TestWebServicesInterface
         $requests = [];
         $statsAll = [];
         $statsData = [];
+        $factory = $this->factory;
         $client = new Client(['http_errors' => false, 'timeout' => 12.0]);
         $output->writeln("Start : ".date('c'));
         $env = $this->config['env'];
         $dataRequest = $this->config['datas'];
         $responseData = $this->config['response'];
-        $promises = (function () use ($env, $dataRequest, &$statsAll, $client, $responseData, &$statsData) {
+        $promises = (function () use ($env, $dataRequest, &$statsAll, $client, $responseData, &$statsData, $factory) {
             foreach ($env as $key => $url) {
                 $statsAll[$url] = ['started_at'=>microtime(true)];
-                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData) {
+                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $factory) {
                     //echo $stats->getEffectiveUri()." => ".$url."\n";
                     //echo "Transfert time : " . $stats->getTransferTime()."\n";
                     //var_dump($stats->getHandlerStats());
@@ -61,7 +65,7 @@ class WsHTTP implements TestWebServicesInterface
                         $statsArray = $stats->getHandlerStats();
                     }
                     $statsAll[$url] = $statsArray;
-                    $statsData[$url] = new WsQueryResult($statsArray, $responseData, $stats->getResponse());
+                    $statsData[$url] = $factory->makeResult($statsArray, $responseData, $stats->getResponse());
                 },]);
             }
         })();

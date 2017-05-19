@@ -10,10 +10,11 @@
 namespace Mactronique\TestWs\WebServices;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use Mactronique\TestWs\Factory\ResultFactory;
 
 interface TestWebServicesInterface
 {
-    public function __construct(array $config);
+    public function __construct(array $config, ResultFactory $factory);
 
     /**
      * @throws \Exception si une erreur intervient.

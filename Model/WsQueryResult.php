@@ -42,6 +42,14 @@ class WsQueryResult
     }
 
     /**
+     * @return string
+     */
+    public function getHostName()
+    {
+        return $this->getStats('hostname', '');
+    }
+
+    /**
      * @param string $name The header name
      * @return array
      */

@@ -10,12 +10,15 @@
 namespace Mactronique\TestWs\WebServices;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use Mactronique\TestWs\Factory\ResultFactory;
 
 class WsSoap implements TestWebServicesInterface
 {
     private $config;
 
-    public function __construct(array $config)
+    private $factory;
+
+    public function __construct(array $config, ResultFactory $factory)
     {
         $this->config = $config;
         if (!array_key_exists('env', $this->config) || !is_array($this->config['env']) || 0 == count($this->config['env'])) {
@@ -29,6 +32,7 @@ class WsSoap implements TestWebServicesInterface
         if (!array_key_exists('response', $this->config) || !is_array($this->config['functions']) || 0 == count($this->config['functions'])) {
             throw new \Exception('Les informations de réponse ne sont pas définit', 1);
         }
+        $this->factory = $factory;
     }
 
     /**
@@ -118,7 +122,7 @@ class WsSoap implements TestWebServicesInterface
             if ($output->isDebug()) {
                 dump($soapClient->__getLastResponse());
             }
-            $results[$fullUrl] = new \Mactronique\TestWs\Model\WsQueryResult($stats, $this->config['response'], $responsePsr);
+            $results[$fullUrl] = $this->factory->makeResult($stats, $this->config['response'], $responsePsr);
         }
         return $results;
     }

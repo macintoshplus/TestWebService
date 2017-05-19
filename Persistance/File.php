@@ -31,6 +31,7 @@ class File implements PersistanceInterface
                 'total_time' => $object->getTotalTime(),
                 'success' => $object->isSuccess(),
                 'started_at' => $object->getStartedAt(),
+                'hostname' => $object->getHostName(),
             ];
         }
 

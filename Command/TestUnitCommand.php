@@ -57,6 +57,13 @@ class TestUnitCommand extends Command
 
         $ws = $this->getWebServiceToTest($input->getArgument('name'));
 
+        $hostname = gethostname();
+        if ($hostname === false) {
+            $hostname = 'undefined hostname '.uniqid();
+        }
+
+        $factory = new \Mactronique\TestWs\Factory\ResultFactory($hostname);
+
         foreach ($ws as $name => $infos) {
             $output->writeln('Execution du test sur le web service <info>'.$name.'</info>');
             $class = $infos['class'];
@@ -65,7 +72,7 @@ class TestUnitCommand extends Command
                 continue;
             }
             try {
-                $classTest = new $class($infos['config']);
+                $classTest = new $class($infos['config'], $factory);
                 if (!$classTest instanceof \Mactronique\TestWs\WebServices\TestWebServicesInterface) {
                     throw new \Exception("La classe de test n'implemente pas l'nterface 'Mactronique\TestWs\WebServices\TestWebServicesInterface'", 1);
                 }

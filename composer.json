@@ -25,6 +25,7 @@
 		"symfony/config": "^3.0",
 		"symfony/var-dumper": "^3.0",
         "guzzlehttp/guzzle": "^6.2",
-        "influxdb/influxdb-php": "^1.14"
+        "influxdb/influxdb-php": "^1.14",
+        "atoum/atoum": "^2.8"
     }
 }

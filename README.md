@@ -63,3 +63,7 @@ Example :
 ```bash
 php ./TestWebService run myWebServiceToTest
 ```
+
+# Retreive data from InfluxDb
+
+You can use Grafana for display datas stored into InfluxDB database.

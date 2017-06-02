@@ -52,8 +52,8 @@ class InfluxDB implements PersistanceInterface
                 'success' => $object->isSuccess(),
             ];
             
-            $points[] = new \InfluxDB\Point($name, null, $tags, $values, str_replace(".", "", sprintf("%0.06f", $object->getStartedAt())));
+            $points[] = new \InfluxDB\Point($name, null, $tags, $values, str_replace(".", "", sprintf("%0.03f", $object->getStartedAt())));
         }
-        $database->writePoints($points);
+        $database->writePoints($points, \InfluxDB\Database::PRECISION_MILLISECONDS);
     }
 }

@@ -45,7 +45,7 @@ class TestUnitCommand extends Command
     {
         $configFile = __DIR__.'/../webservices.yml';
         if (!file_exists($configFile)) {
-            throw new \Exception('Le fichier de configuration ($configFile) est absent ! ', 123);
+            throw new \Exception('Le fichier de configuration ('.$configFile.') est absent ! ', 123);
         }
 
         $config = Yaml::parse(file_get_contents($configFile));
@@ -77,7 +77,7 @@ class TestUnitCommand extends Command
                     throw new \Exception("La classe de test n'implemente pas l'nterface 'Mactronique\TestWs\WebServices\TestWebServicesInterface'", 1);
                 }
                 $results = $classTest->runTests($output);
-                var_dump($results);
+                //var_dump($results);
                 if (isset($infos['storage'])) {
                     $storageManager = new \Mactronique\TestWs\Persistance\StorageManager($infos['storage']);
                     $storageManager->save($results, $name);

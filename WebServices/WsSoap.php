@@ -51,7 +51,7 @@ class WsSoap implements TestWebServicesInterface
     private function testEnv(array $functions, $url, OutputInterface $output)
     {
         $options = array('cache_wsdl' => 0, 'trace' => 1, 'soap_version' => SOAP_1_1, 'user_agent'=> 'Test Ws Client From PHP '.PHP_VERSION);
-        if (false === strpos($url, '.wsdl')) {
+        if (false === stripos($url, 'wsdl')) {
             $options['uri'] = 'http://test-uri/';
             $options['location'] = $url;
             $finalUrl = null;
@@ -76,6 +76,7 @@ class WsSoap implements TestWebServicesInterface
                     $result = $soapClient->$function($parameters);
                 }
             } catch (\Exception $e) {
+                dump($e);
                 //dump($soapClient->__getLastRequest(), $soapClient->__getLastResponseHeaders(), $soapClient->__getLastResponse());
                 //throw $e;
             }
@@ -108,7 +109,8 @@ class WsSoap implements TestWebServicesInterface
                     $headersArray2[$matchesHeader[1]] = [$matchesHeader[2]];
                 }
             }
-            $responsePsr = new \GuzzleHttp\Psr7\Response($httpResultCode, $headersArray2, $result, $httpVersion, $httpReason);
+            $lastResponse = $soapClient->__getLastResponse();
+            $responsePsr = new \GuzzleHttp\Psr7\Response($httpResultCode, $headersArray2, $lastResponse, $httpVersion, $httpReason);
 
             if ($output->isDebug()) {
                 $output->writeln('Entete de la reponse : ');
@@ -120,7 +122,7 @@ class WsSoap implements TestWebServicesInterface
             $output->writeln('Reponse : ');
             dump($result);
             if ($output->isDebug()) {
-                dump($soapClient->__getLastResponse());
+                dump($lastResponse);
             }
             $results[$fullUrl] = $this->factory->makeResult($stats, $this->config['response'], $responsePsr);
         }

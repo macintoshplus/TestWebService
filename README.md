@@ -2,6 +2,8 @@
 
 Allow check WebService Soap and HTTP and store result into File on influxDB.
 
+[![Build Status](https://travis-ci.org/macintoshplus/TestWebService.svg?branch=master)](https://travis-ci.org/macintoshplus/TestWebService)
+
 # Install
 
 Download Zip or git clone.

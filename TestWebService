@@ -7,6 +7,6 @@ require __DIR__.'/vendor/autoload.php';
 use Mactronique\TestWs\Command\TestUnitCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('Test WebService', '1.0.0');
+$application = new Application('Test WebService', '1.1.0');
 $application->add(new TestUnitCommand());
 $application->run();

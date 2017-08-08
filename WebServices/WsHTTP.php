@@ -53,9 +53,9 @@ class WsHTTP implements TestWebServicesInterface
         $dataRequest = $this->config['datas'];
         $responseData = $this->config['response'];
         $promises = (function () use ($env, $dataRequest, &$statsAll, $client, $responseData, &$statsData, $factory) {
-            foreach ($env as $key => $url) {
+            foreach ($env as $keyEnv => $url) {
                 $statsAll[$url] = ['started_at'=>microtime(true)];
-                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $factory) {
+                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $factory, $keyEnv) {
                     //echo $stats->getEffectiveUri()." => ".$url."\n";
                     //echo "Transfert time : " . $stats->getTransferTime()."\n";
                     //var_dump($stats->getHandlerStats());
@@ -65,7 +65,7 @@ class WsHTTP implements TestWebServicesInterface
                         $statsArray = $stats->getHandlerStats();
                     }
                     $statsAll[$url] = $statsArray;
-                    $statsData[$url] = $factory->makeResult($statsArray, $responseData, $stats->getResponse());
+                    $statsData[$url] = $factory->makeResult($statsArray, $responseData, $keyEnv, $stats->getResponse());
                 },]);
             }
         })();

@@ -21,9 +21,9 @@ class ResultFactory
         $this->hostname = $hostname;
     }
 
-    public function makeResult(array $stats, array $responseConfig, ResponseInterface $response = null)
+    public function makeResult(array $stats, array $responseConfig, string $requestedEnv, ResponseInterface $response = null)
     {
         $stats['hostname'] = $this->hostname;
-        return new WsQueryResult($stats, $responseConfig, $response);
+        return new WsQueryResult($stats, $responseConfig, $requestedEnv, $response);
     }
 }

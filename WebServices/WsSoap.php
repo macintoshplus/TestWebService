@@ -43,12 +43,12 @@ class WsSoap implements TestWebServicesInterface
         $results = [];
         foreach ($this->config['env'] as $env => $url) {
             $output->writeln('Test de l\'environnement <info>'.$env.'</info>');
-            $results = array_merge($results, $this->testEnv($this->config['functions'], $url, $output));
+            $results = array_merge($results, $this->testEnv($this->config['functions'], $url, $output, $env));
         }
         return $results;
     }
 
-    private function testEnv(array $functions, $url, OutputInterface $output)
+    private function testEnv(array $functions, $url, OutputInterface $output, $env)
     {
         $options = array('cache_wsdl' => 0, 'trace' => 1, 'soap_version' => SOAP_1_1, 'user_agent'=> 'Test Ws Client From PHP '.PHP_VERSION);
         if (false === stripos($url, 'wsdl')) {
@@ -124,7 +124,7 @@ class WsSoap implements TestWebServicesInterface
             if ($output->isDebug()) {
                 dump($lastResponse);
             }
-            $results[$fullUrl] = $this->factory->makeResult($stats, $this->config['response'], $responsePsr);
+            $results[$fullUrl] = $this->factory->makeResult($stats, $this->config['response'], $env, $responsePsr);
         }
         return $results;
     }

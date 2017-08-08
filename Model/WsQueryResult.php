@@ -17,11 +17,17 @@ class WsQueryResult
     private $response;
     private $responseConfig;
 
-    public function __construct(array $stats, array $responseConfig, ResponseInterface $response = null)
+    /**
+     * @var string
+     */
+    private $requestedEnv;
+
+    public function __construct(array $stats, array $responseConfig, string $requestedEnv, ResponseInterface $response = null)
     {
         $this->stats = $stats;
         $this->response = $response;
         $this->responseConfig = $responseConfig;
+        $this->requestedEnv = $requestedEnv;
     }
 
     /**
@@ -82,5 +88,10 @@ class WsQueryResult
     public function getStartedAt()
     {
         return (is_array($this->stats) && isset($this->stats['started_at']))? floatval($this->stats['started_at']):0.0;
+    }
+
+    public function getRequestedEnv()
+    {
+        return $this->requestedEnv;
     }
 }

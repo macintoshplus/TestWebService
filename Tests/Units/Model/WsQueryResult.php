@@ -17,7 +17,7 @@ class WsQueryResult extends atoum
     public function test()
     {
         $this->assert('noRequest')
-            ->if($this->newTestedInstance([], []))
+            ->if($this->newTestedInstance([], [], ''))
             ->then
                 ->boolean($this->testedInstance->isSuccess())->isFalse
                 ->string($this->testedInstance->getServerName())->isEmpty
@@ -25,6 +25,8 @@ class WsQueryResult extends atoum
                 ->string($this->testedInstance->getStats('test', ''))->isEmpty
                 ->float($this->testedInstance->getTotalTime())->isEqualTo(0.0)
                 ->float($this->testedInstance->getStartedAt())->isEqualTo(0.0)
+                ->string($this->testedInstance->getRequestedEnv())->isEqualTo('')
+                ->string($this->testedInstance->getHostName())->isEqualTo('')
         ;
     }
 
@@ -43,11 +45,13 @@ class WsQueryResult extends atoum
                 [
                     'total_time' => 0.2345,
                     'started_at' => 123423.24,
+                    'hostname' => 'hostname',
                 ],
                 [
                     'http_code'=>'200',
                     'server_header'=>'Site',
                 ],
+                'test',
                 $mockRequest
             ))
             ->then
@@ -57,6 +61,8 @@ class WsQueryResult extends atoum
                 ->string($this->testedInstance->getStats('test', ''))->isEmpty
                 ->float($this->testedInstance->getTotalTime())->isEqualTo(0.2345)
                 ->float($this->testedInstance->getStartedAt())->isEqualTo(123423.24)
+                ->string($this->testedInstance->getRequestedEnv())->isEqualTo('test')
+                ->string($this->testedInstance->getHostName())->isEqualTo('hostname')
         ;
     }
 }

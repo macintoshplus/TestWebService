@@ -29,24 +29,35 @@ webservices:
                 # Set here all environement URL. For WsSoap, set the WSDL URL.
                 prod: 'http://host_name/wsForMe.wsdl'
             functions:
-                # Set here the function do call over the web service
+                # Set here the function do call over the SOAP web service
                 wsFunctionName:
                     parameters1: value1
                     parameters2: value2
-            response: # The data for evaluate the response.
-                http_code: 200 # The HTTP Code need.
-                server_header: SRV # The name of header with the value can identify the server.
+            datas:
+                # Set here the datas for HTTP WebService
+                method: GET              # Or POST, PUT...
+                mime: application/json   # Query mime
+                datas: ~                 # Query body
+            response:                    # The data for evaluate the response.
+                http_code: 200           # The HTTP Code need.
+                server_header: SRV       # The name of header with the value can identify the server.
         # Exemple of persistance configuration for InfluxDB
         storage:
             type: InfluxDB
-            config: # Set the config for the driver
-                host: 127.0.0.1
-                database: testws
+            config:                      # Set the config for the driver
+                host: 127.0.0.1          # Server name or IP
+                port: 8086               # The TCP Port
+                username: user_write     # The username
+                password: *****          # The password for the user database
+                ssl: false               # The connexion user SSL
+                verifySSL: true          # Check Certificat
+                timeout: 1.0             # Connection time out
+                database: testws         # Database name
         # Exemple of persistance configuration for File
         storage:
             type: File
             config:
-                file: file.json # Location for the destination file.
+                file: file.json          # Location for the destination file.
 ```
 
 # Run

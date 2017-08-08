@@ -46,6 +46,7 @@ class InfluxDB implements PersistanceInterface
                 'srv_name' => $object->getServerName(),
                 'url' => $object->getStats('url'),
                 'hostname' => $object->getHostName(),
+                'env' => $object->getRequestedEnv(),
             ];
             $values = [
                 'total_time' => $object->getTotalTime(),

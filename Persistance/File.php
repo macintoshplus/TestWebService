@@ -32,6 +32,7 @@ class File implements PersistanceInterface
                 'success' => $object->isSuccess(),
                 'started_at' => $object->getStartedAt(),
                 'hostname' => $object->getHostName(),
+                'env' => $object->getRequestedEnv(),
             ];
         }
 

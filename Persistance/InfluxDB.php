@@ -11,13 +11,26 @@ namespace Mactronique\TestWs\Persistance;
 
 class InfluxDB implements PersistanceInterface
 {
+
+    /**
+     * @var array
+     */
     private $config;
 
+    /**
+     * InfluxDB constructor.
+     * @param array $config
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
     }
 
+    /**
+     * @param array $datas
+     * @param string $name
+     * @throws PersistanceException
+     */
     public function save(array $datas, $name)
     {
         if (isset($this->config['dsn'])) {
@@ -35,7 +48,7 @@ class InfluxDB implements PersistanceInterface
             $database = $client->selectDB($this->config['database']);
         }
         if (!$database->exists()) {
-            throw new \Exception("Database does not exists ".$this->config['database']."", 1);
+            throw new PersistanceException("Database does not exists ".$this->config['database']."", 1);
         }
         if (empty($name)) {
             $name='TestWs';

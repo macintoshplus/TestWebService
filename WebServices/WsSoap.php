@@ -14,23 +14,39 @@ use Mactronique\TestWs\Factory\ResultFactory;
 
 class WsSoap implements TestWebServicesInterface
 {
+    const CONFIG_KEY_ENV = 'env';
+    const CONFIG_KEY_FONCTIONS = 'functions';
+    const CONFIG_KEY_RESPONSE = 'response';
+    const CONFIG_KEY_METHOD_CALL = 'methodCall';
+    /**
+     * @var array
+     */
     private $config;
 
+    /**
+     * @var ResultFactory
+     */
     private $factory;
 
+    /**
+     * WsSoap constructor.
+     * @param array $config
+     * @param ResultFactory $factory
+     * @throws WebServiceException
+     */
     public function __construct(array $config, ResultFactory $factory)
     {
         $this->config = $config;
-        if (!array_key_exists('env', $this->config) || !is_array($this->config['env']) || 0 == count($this->config['env'])) {
-            throw new \Exception('Les environnements ne sont pas définit', 1);
+        if (!array_key_exists(self::CONFIG_KEY_ENV, $this->config) || !is_array($this->config[self::CONFIG_KEY_ENV]) || 0 == count($this->config[self::CONFIG_KEY_ENV])) {
+            throw new WebServiceException('Les environnements ne sont pas définit', 1);
         }
 
-        if (!array_key_exists('functions', $this->config) || !is_array($this->config['functions']) || 0 == count($this->config['functions'])) {
-            throw new \Exception('Les fonctions ne sont pas définit', 1);
+        if (!array_key_exists(self::CONFIG_KEY_FONCTIONS, $this->config) || !is_array($this->config[self::CONFIG_KEY_FONCTIONS]) || 0 == count($this->config[self::CONFIG_KEY_FONCTIONS])) {
+            throw new WebServiceException('Les fonctions ne sont pas définit', 1);
         }
 
-        if (!array_key_exists('response', $this->config) || !is_array($this->config['functions']) || 0 == count($this->config['functions'])) {
-            throw new \Exception('Les informations de réponse ne sont pas définit', 1);
+        if (!array_key_exists(self::CONFIG_KEY_RESPONSE, $this->config) || !is_array($this->config[self::CONFIG_KEY_RESPONSE]) || 0 == count($this->config[self::CONFIG_KEY_RESPONSE])) {
+            throw new WebServiceException('Les informations de réponse ne sont pas définit', 1);
         }
         $this->factory = $factory;
     }
@@ -41,13 +57,20 @@ class WsSoap implements TestWebServicesInterface
     public function runTests(OutputInterface $output)
     {
         $results = [];
-        foreach ($this->config['env'] as $env => $url) {
+        foreach ($this->config[self::CONFIG_KEY_ENV] as $env => $url) {
             $output->writeln('Test de l\'environnement <info>'.$env.'</info>');
             $results = array_merge($results, $this->testEnv($this->config['functions'], $url, $output, $env));
         }
         return $results;
     }
 
+    /**
+     * @param array $functions
+     * @param $url
+     * @param OutputInterface $output
+     * @param $env
+     * @return array
+     */
     private function testEnv(array $functions, $url, OutputInterface $output, $env)
     {
         $options = array('cache_wsdl' => 0, 'trace' => 1, 'soap_version' => SOAP_1_1, 'user_agent'=> 'Test Ws Client From PHP '.PHP_VERSION);
@@ -70,15 +93,13 @@ class WsSoap implements TestWebServicesInterface
             $start['started_at'] = microtime(true);
             $result = null;
             try {
-                if (!array_key_exists('methodCall', $this->config) || $this->config['methodCall'] == 'soapCall') {
+                if (!array_key_exists(slef::CONFIG_KEY_METHOD_CALL, $this->config) || $this->config[self::CONFIG_KEY_METHOD_CALL] == 'soapCall') {
                     $result = $soapClient->__soapCall($function, $parameters);
                 } else {
                     $result = $soapClient->$function($parameters);
                 }
             } catch (\Exception $e) {
                 dump($e);
-                //dump($soapClient->__getLastRequest(), $soapClient->__getLastResponseHeaders(), $soapClient->__getLastResponse());
-                //throw $e;
             }
 
             $stats['total_time'] = microtime(true) - $start['started_at'];
@@ -98,7 +119,7 @@ class WsSoap implements TestWebServicesInterface
             }
             //Transformation des entêtes
             $headersArray2 = [];
-            foreach ($headersArray as $key => $value) {
+            foreach ($headersArray as $value) {
                 if (preg_match('/^([a-zA-Z0-9\-\_]*): (.*)$/', $value, $matchesHeader)) {
                     //Entete déjà existante
                     if (isset($headersArray2[$matchesHeader[1]])) {
@@ -117,14 +138,12 @@ class WsSoap implements TestWebServicesInterface
                 dump($headers);
             }
 
-            //$output->writeln('Serveur ayant repondu : <info>'.$site.'</info>');
-
             $output->writeln('Reponse : ');
             dump($result);
             if ($output->isDebug()) {
                 dump($lastResponse);
             }
-            $results[$fullUrl] = $this->factory->makeResult($stats, $this->config['response'], $env, $responsePsr);
+            $results[$fullUrl] = $this->factory->makeResult($stats, $this->config[self::CONFIG_KEY_RESPONSE], $env, $responsePsr);
         }
         return $results;
     }

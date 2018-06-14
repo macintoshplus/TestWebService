@@ -16,23 +16,35 @@ use Mactronique\TestWs\Factory\ResultFactory;
 
 class WsHTTP implements TestWebServicesInterface
 {
+    /**
+     * @var array
+     */
     private $config;
 
+    /**
+     * @var ResultFactory
+     */
     private $factory;
 
+    /**
+     * WsHTTP constructor.
+     * @param array $config
+     * @param ResultFactory $factory
+     * @throws WebServiceException
+     */
     public function __construct(array $config, ResultFactory $factory)
     {
         $this->config = $config;
         if (!array_key_exists('env', $this->config) || !is_array($this->config['env']) || 0 == count($this->config['env'])) {
-            throw new \Exception('Les environnements ne sont pas définis', 1);
+            throw new WebServiceException('Les environnements ne sont pas définis', 1);
         }
 
         if (!array_key_exists('datas', $this->config) || !is_array($this->config['datas']) || 0 == count($this->config['datas'])) {
-            throw new \Exception('Les données ne sont pas définies', 1);
+            throw new WebServiceException('Les données ne sont pas définies', 1);
         }
 
         if (!array_key_exists('response', $this->config) || !is_array($this->config['response']) || 0 == count($this->config['response'])) {
-            throw new \Exception('Les données de la réponse ne sont pas définies', 1);
+            throw new WebServiceException('Les données de la réponse ne sont pas définies', 1);
         }
         $this->factory = $factory;
     }
@@ -43,7 +55,6 @@ class WsHTTP implements TestWebServicesInterface
      */
     public function runTests(OutputInterface $output)
     {
-        $requests = [];
         $statsAll = [];
         $statsData = [];
         $factory = $this->factory;
@@ -56,9 +67,7 @@ class WsHTTP implements TestWebServicesInterface
             foreach ($env as $keyEnv => $url) {
                 $statsAll[$url] = ['started_at'=>microtime(true)];
                 yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $factory, $keyEnv) {
-                    //echo $stats->getEffectiveUri()." => ".$url."\n";
-                    //echo "Transfert time : " . $stats->getTransferTime()."\n";
-                    //var_dump($stats->getHandlerStats());
+
                     if (isset($statsAll[$url]) && is_array($statsAll[$url])) {
                         $statsArray = array_merge($statsAll[$url], $stats->getHandlerStats());
                     } else {
@@ -70,17 +79,10 @@ class WsHTTP implements TestWebServicesInterface
             }
         })();
 
-        //$output->writeln("All query launch : ".date('c'));
-
-        //$statsData = [];
         $responseData = $this->config['response'];
         (new \GuzzleHttp\Promise\EachPromise($promises, [
             'concurrency' => 10
         ]))->promise()->wait();
-        //$output->writeln("All query requested : ".date('c'));
-
-
-        //$output->writeln("All response worked : ".date('c'));
 
         return $statsData;
     }

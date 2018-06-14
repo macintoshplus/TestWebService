@@ -22,6 +22,13 @@ class WsQueryResult
      */
     private $requestedEnv;
 
+    /**
+     * WsQueryResult constructor.
+     * @param array $stats
+     * @param array $responseConfig
+     * @param string $requestedEnv
+     * @param ResponseInterface|null $response
+     */
     public function __construct(array $stats, array $responseConfig, string $requestedEnv, ResponseInterface $response = null)
     {
         $this->stats = $stats;
@@ -90,6 +97,9 @@ class WsQueryResult
         return (is_array($this->stats) && isset($this->stats['started_at']))? floatval($this->stats['started_at']):0.0;
     }
 
+    /**
+     * @return string
+     */
     public function getRequestedEnv()
     {
         return $this->requestedEnv;

@@ -11,5 +11,11 @@ namespace Mactronique\TestWs\Persistance;
 
 interface PersistanceInterface
 {
-	public function save(array $datas, $name);
+    /**
+     * @param array $datas
+     * @param $name
+     * @return mixed
+     * @throw PersistanceException
+     */
+    public function save(array $datas, $name);
 }

@@ -14,10 +14,15 @@ use Mactronique\TestWs\Factory\ResultFactory;
 
 interface TestWebServicesInterface
 {
+    /**
+     * TestWebServicesInterface constructor.
+     * @param array $config
+     * @param ResultFactory $factory
+     */
     public function __construct(array $config, ResultFactory $factory);
 
     /**
-     * @throws \Exception si une erreur intervient.
+     * @throws WebServiceException si une erreur intervient.
      * @return array
      */
     public function runTests(OutputInterface $output);

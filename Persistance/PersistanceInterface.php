@@ -13,9 +13,9 @@ interface PersistanceInterface
 {
     /**
      * @param array $datas
-     * @param $name
+     * @param string $name
      * @return mixed
      * @throw PersistanceException
      */
-    public function save(array $datas, $name);
+    public function save(array $datas, string $name);
 }

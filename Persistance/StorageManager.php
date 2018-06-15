@@ -34,11 +34,11 @@ class StorageManager implements PersistanceInterface
 
     /**
      * @param array $datas
-     * @param $name
+     * @param string $name
      * @return mixed
      * @throws PersistanceException
      */
-    public function save(array $datas, $name)
+    public function save(array $datas, string $name)
     {
         $handler = sprintf('Mactronique\TestWs\Persistance\%s', $this->config['type']);
         if (!class_exists($handler)) {

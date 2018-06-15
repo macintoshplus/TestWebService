@@ -18,56 +18,79 @@ class InfluxDB implements PersistanceInterface
     private $config;
 
     /**
+     * @var \InfluxDB\Client
+     */
+    private $database;
+
+    /**
      * InfluxDB constructor.
      * @param array $config
+     * @param \InfluxDB\Database|null $database
      */
-    public function __construct(array $config)
+    public function __construct(array $config, \InfluxDB\Database $database = null)
     {
         $this->config = $config;
+        $this->database = $database;
     }
+
 
     /**
      * @param array $datas
      * @param string $name
+     * @return mixed|void
      * @throws PersistanceException
      */
-    public function save(array $datas, $name)
+    public function save(array $datas, string $name)
     {
+        try {
+            $database = $this->selectDatabase();
+            if (!$database->exists()) {
+                throw new PersistanceException("Database does not exists " . $this->config['database'] . "", 1);
+            }
+            if (empty($name)) {
+                $name = 'TestWs';
+            }
+            $points = [];
+            foreach ($datas as $key => $object) {
+                $tags = [
+                    'srv_name' => $object->getServerName(),
+                    'url' => $object->getStats('url'),
+                    'hostname' => $object->getHostName(),
+                    'env' => $object->getRequestedEnv(),
+                ];
+                $values = [
+                    'total_time' => $object->getTotalTime(),
+                    'success' => $object->isSuccess(),
+                ];
+
+                $points[] = new \InfluxDB\Point($name, null, $tags, $values,
+                    str_replace(".", "", sprintf("%0.03f", $object->getStartedAt())));
+            }
+            $database->writePoints($points, \InfluxDB\Database::PRECISION_MILLISECONDS);
+        } catch (\InfluxDB\Exception $e) {
+            throw new PersistanceException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    private function selectDatabase(): \InfluxDB\Database
+    {
+        if ($this->client !== null) {
+            return $this->client;
+        }
+
         if (isset($this->config['dsn'])) {
-            $database = \InfluxDB\Client::fromDSN($this->config['dsn']);
-        } else {
-            $client = new \InfluxDB\Client(
-                $this->config['host'],
-                (!isset($this->config['port']))? 8086:$this->config['port'],
-                (!isset($this->config['username']))? '':$this->config['username'],
-                (!isset($this->config['password']))? '':$this->config['password'],
-                (!isset($this->config['ssl']))? false:boolval($this->config['ssl']),
-                (!isset($this->config['verifySSL']))? false:boolval($this->config['verifySSL']),
-                (!isset($this->config['timeout']))? 0:intval($this->config['timeout'])
-            );
-            $database = $client->selectDB($this->config['database']);
+            return \InfluxDB\Client::fromDSN($this->config['dsn']);
         }
-        if (!$database->exists()) {
-            throw new PersistanceException("Database does not exists ".$this->config['database']."", 1);
-        }
-        if (empty($name)) {
-            $name='TestWs';
-        }
-        $points = [];
-        foreach ($datas as $key => $object) {
-            $tags = [
-                'srv_name' => $object->getServerName(),
-                'url' => $object->getStats('url'),
-                'hostname' => $object->getHostName(),
-                'env' => $object->getRequestedEnv(),
-            ];
-            $values = [
-                'total_time' => $object->getTotalTime(),
-                'success' => $object->isSuccess(),
-            ];
-            
-            $points[] = new \InfluxDB\Point($name, null, $tags, $values, str_replace(".", "", sprintf("%0.03f", $object->getStartedAt())));
-        }
-        $database->writePoints($points, \InfluxDB\Database::PRECISION_MILLISECONDS);
+
+        $client = new \InfluxDB\Client(
+            $this->config['host'],
+            (!isset($this->config['port'])) ? 8086 : $this->config['port'],
+            (!isset($this->config['username'])) ? '' : $this->config['username'],
+            (!isset($this->config['password'])) ? '' : $this->config['password'],
+            (!isset($this->config['ssl'])) ? false : boolval($this->config['ssl']),
+            (!isset($this->config['verifySSL'])) ? false : boolval($this->config['verifySSL']),
+            (!isset($this->config['timeout'])) ? 0 : intval($this->config['timeout'])
+        );
+        return $client->selectDB($this->config['database']);
     }
 }

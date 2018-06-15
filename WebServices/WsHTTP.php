@@ -60,16 +60,16 @@ class WsHTTP implements TestWebServicesInterface
     {
         $statsAll = [];
         $statsData = [];
-        $factory = $this->factory;
+        $resultFactory = $this->factory;
         $client = new Client(['http_errors' => false, 'timeout' => 12.0]);
         $output->writeln("Start : ".date('c'));
         $env = $this->config['env'];
         $dataRequest = $this->config[self::CONFIG_KEY_DATAS];
         $responseData = $this->config[self::CONFIG_KEY_RESPONSE];
-        $promises = (function () use ($env, $dataRequest, &$statsAll, $client, $responseData, &$statsData, $factory) {
+        $promises = (function () use ($env, $dataRequest, &$statsAll, $client, $responseData, &$statsData, $resultFactory) {
             foreach ($env as $keyEnv => $url) {
                 $statsAll[$url] = ['started_at'=>microtime(true)];
-                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $factory, $keyEnv) {
+                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $resultFactory, $keyEnv) {
 
                     if (isset($statsAll[$url]) && is_array($statsAll[$url])) {
                         $statsArray = array_merge($statsAll[$url], $stats->getHandlerStats());
@@ -77,7 +77,7 @@ class WsHTTP implements TestWebServicesInterface
                         $statsArray = $stats->getHandlerStats();
                     }
                     $statsAll[$url] = $statsArray;
-                    $statsData[$url] = $factory->makeResult($statsArray, $responseData, $keyEnv, $stats->getResponse());
+                    $statsData[$url] = $resultFactory->makeResult($statsArray, $responseData, $keyEnv, $stats->getResponse());
                 },]);
             }
         })();

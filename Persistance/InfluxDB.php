@@ -74,8 +74,8 @@ class InfluxDB implements PersistanceInterface
 
     private function selectDatabase(): \InfluxDB\Database
     {
-        if ($this->client !== null) {
-            return $this->client;
+        if ($this->database !== null) {
+            return $this->database;
         }
 
         if (isset($this->config['dsn'])) {

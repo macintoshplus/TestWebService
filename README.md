@@ -41,6 +41,7 @@ webservices:
                 method: GET              # Or POST, PUT...
                 mime: application/json   # Query mime
                 datas: ~                 # Query body
+                authorization: ~         # Authorisation Header Content
             response:                    # The data for evaluate the response.
                 http_code: 200           # The HTTP Code need.
                 server_header: SRV       # The name of header with the value can identify the server.

@@ -69,7 +69,15 @@ class WsHTTP implements TestWebServicesInterface
         $promises = (function () use ($env, $dataRequest, &$statsAll, $client, $responseData, &$statsData, $resultFactory) {
             foreach ($env as $keyEnv => $url) {
                 $statsAll[$url] = ['started_at'=>microtime(true)];
-                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => ['Content-Type' => $dataRequest['mime']], 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $resultFactory, $keyEnv) {
+                $headers = [];
+                if (isset($dataRequest['mime'])) {
+                    $headers['Content-Type'] = $dataRequest['mime'];
+                }
+                if (isset($dataRequest['authorization'])) {
+                    $headers['Authorization'] = $dataRequest['authorization'];
+                }
+
+                yield $client->requestAsync($dataRequest['method'], $url, ['headers' => $headers, 'body' => $dataRequest['datas'], 'on_stats' => function (\GuzzleHttp\TransferStats $stats) use (&$statsAll, $url, $responseData, &$statsData, $resultFactory, $keyEnv) {
 
                     if (isset($statsAll[$url]) && is_array($statsAll[$url])) {
                         $statsArray = array_merge($statsAll[$url], $stats->getHandlerStats());

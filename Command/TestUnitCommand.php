@@ -7,6 +7,7 @@
  * @copyright 2016 - Jean-Baptiste Nahan
  * @license MIT
  */
+
 namespace Mactronique\TestWs\Command;
 
 use Mactronique\TestWs\Configuration\ConfigurationException;
@@ -32,8 +33,7 @@ class TestUnitCommand extends Command
                 'name',
                 InputArgument::OPTIONAL,
                 'Nom du web service à tester'
-            )
-        ;
+            );
     }
 
     /**
@@ -44,9 +44,9 @@ class TestUnitCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $configFile = __DIR__.'/../webservices.yml';
+        $configFile = __DIR__ . '/../webservices.yml';
         if (!file_exists($configFile)) {
-            throw new ConfigurationException('Le fichier de configuration ('.$configFile.') est absent ! ', 123);
+            throw new ConfigurationException('Le fichier de configuration (' . $configFile . ') est absent ! ', 123);
         }
 
         $configs = [Yaml::parse(file_get_contents($configFile))];
@@ -58,24 +58,31 @@ class TestUnitCommand extends Command
 
         $hostname = gethostname();
         if ($hostname === false) {
-            $hostname = 'undefined hostname '.uniqid();
+            $hostname = 'undefined hostname ' . uniqid();
         }
 
         $factory = new \Mactronique\TestWs\Factory\ResultFactory($hostname);
 
         foreach ($ws as $name => $infos) {
-            $output->writeln('Execution du test sur le web service <info>'.$name.'</info>');
+            $output->writeln('Execution du test sur le web service <info>' . $name . '</info>');
             $class = $infos['class'];
             if (!class_exists($class)) {
-                $this->getApplication()->renderException(new \Exception('La Classe "'.$class.'" n\'exite pas', 404), $output);
+                $this->getApplication()->renderException(new \Exception('La Classe "' . $class . '" n\'exite pas', 404),
+                    $output);
                 continue;
             }
             try {
                 $classTest = new $class($infos['config'], $factory);
                 if (!$classTest instanceof \Mactronique\TestWs\WebServices\TestWebServicesInterface) {
-                    throw new ConfigurationException("La classe de test n'implemente pas l'interface 'Mactronique\TestWs\WebServices\TestWebServicesInterface'", 1);
+                    throw new ConfigurationException("La classe de test n'implemente pas l'interface 'Mactronique\TestWs\WebServices\TestWebServicesInterface'",
+                        1);
                 }
                 $results = $classTest->runTests($output);
+
+                if ($output->isVeryVerbose()) {
+                    $output->writeln('<info>Résultat de la requête :</info>');
+                    dump($results);
+                }
 
                 if (isset($infos['storage'])) {
                     $storageManager = new \Mactronique\TestWs\Persistance\StorageManager($infos['storage']);
@@ -86,7 +93,7 @@ class TestUnitCommand extends Command
                 continue;
             }
         }
-        $output->writeln('Fin ! '.date('c'));
+        $output->writeln('Fin ! ' . date('c'));
     }
 
     /**

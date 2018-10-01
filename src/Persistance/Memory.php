@@ -7,6 +7,7 @@
  * @copyright 2017 - Jean-Baptiste Nahan
  * @license MIT
  */
+
 namespace Mactronique\TestWs\Persistance;
 
 class Memory implements PersistanceInterface
@@ -40,7 +41,7 @@ class Memory implements PersistanceInterface
     public function save(array $datas, string $name)
     {
         if (empty($name)) {
-            $name='TestWs';
+            $name = 'TestWs';
         }
         $tags = [];
         foreach ($datas as $object) {

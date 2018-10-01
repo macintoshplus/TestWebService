@@ -7,6 +7,7 @@
  * @copyright 2017 - Jean-Baptiste Nahan
  * @license MIT
  */
+
 namespace Mactronique\TestWs\Persistance;
 
 class InfluxDB implements PersistanceInterface

@@ -10,10 +10,9 @@
 
 namespace Mactronique\TestWs\WebServices;
 
-use Symfony\Component\Console\Output\OutputInterface;
 use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
 use Mactronique\TestWs\Factory\ResultFactory;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class WsHTTP implements TestWebServicesInterface
 {

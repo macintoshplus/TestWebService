@@ -7,10 +7,11 @@
  * @copyright 2016 - Jean-Baptiste Nahan
  * @license MIT
  */
+
 namespace Mactronique\TestWs\Configuration;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class MainConfiguration implements ConfigurationInterface
 {
@@ -22,27 +23,26 @@ class MainConfiguration implements ConfigurationInterface
         // ... add node definitions to the root of the tree
         $rootNode
             ->children()
-                ->arrayNode('webservices')
-                    ->useAttributeAsKey('name')
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('class')->end()
-                            ->arrayNode('config')
-                                ->prototype('variable')->end()
-                            ->end()
-                            ->arrayNode('storage')
-                                ->children()
-                                    ->scalarNode('type')->end()
-                                    ->arrayNode('config')
-                                        ->prototype('variable')->end()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
+            ->arrayNode('webservices')
+            ->useAttributeAsKey('name')
+            ->prototype('array')
+            ->children()
+            ->scalarNode('class')->end()
+            ->arrayNode('config')
+            ->prototype('variable')->end()
             ->end()
-        ;
+            ->arrayNode('storage')
+            ->children()
+            ->scalarNode('type')->end()
+            ->arrayNode('config')
+            ->prototype('variable')->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end();
 
         return $treeBuilder;
     }

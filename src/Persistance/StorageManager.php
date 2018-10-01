@@ -7,6 +7,7 @@
  * @copyright 2017 - Jean-Baptiste Nahan
  * @license MIT
  */
+
 namespace Mactronique\TestWs\Persistance;
 
 class StorageManager implements PersistanceInterface
@@ -42,7 +43,7 @@ class StorageManager implements PersistanceInterface
     {
         $handler = sprintf('Mactronique\TestWs\Persistance\%s', $this->config['type']);
         if (!class_exists($handler)) {
-            throw new PersistanceException("The class ".$handler." is not found", 1);
+            throw new PersistanceException("The class " . $handler . " is not found", 1);
         }
 
         $handler = new $handler($this->config['config']);

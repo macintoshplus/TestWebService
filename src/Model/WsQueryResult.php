@@ -14,8 +14,17 @@ use Psr\Http\Message\ResponseInterface;
 
 class WsQueryResult
 {
+    /**
+     * @var array
+     */
     private $stats;
+    /**
+     * @var null|ResponseInterface
+     */
     private $response;
+    /**
+     * @var array
+     */
     private $responseConfig;
 
     /**

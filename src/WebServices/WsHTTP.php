@@ -104,8 +104,7 @@ class WsHTTP implements TestWebServicesInterface
                         &$statsAll,
                         $url,
                         $responseData,
-                        &
-                        $statsData,
+                        &$statsData,
                         $resultFactory,
                         $keyEnv
                     ) {

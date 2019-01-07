@@ -10,8 +10,6 @@ php:
 addons:
   sonarcloud:
     organization: "macintoshplus-github"
-      
-script:
 
 before_script:
   - composer install

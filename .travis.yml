@@ -4,14 +4,21 @@ php:
   - 7.0
   - 7.1
   - 7.2
+  - 7.3
 
 #services: redis
 
+addons:
+  sonarcloud:
+    organization: "macintoshplus-github"
+      
+script:
+
 before_script:
-  - composer self-update
-  - composer update
+  - composer install
   - phpenv --version
   - phpenv versions
 
 script:
   - php vendor/bin/atoum
+  - sonar-scanner -Dsonar.projectKey=testwebservice -Dsonar.organization=macintoshplus-github -Dsonar.sources=./src,./TestWebService -Dsonar.host.url=https://sonarcloud.io -Dsonar.test.inclusions=Tests/**

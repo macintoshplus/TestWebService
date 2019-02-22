@@ -5,6 +5,14 @@ Allow check WebService Soap and HTTP (REST API) and store result into File or in
 [![Build Status](https://travis-ci.org/macintoshplus/TestWebService.svg?branch=master)](https://travis-ci.org/macintoshplus/TestWebService)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/macintoshplus/TestWebService/blob/master/LICENSE)
 
+# Requirements
+
+* PHP 7.1+
+* PHP Curl Extension (with the CA-Bundle INI paramater defined)
+* PHP OpenSSL Extension (for HTTPS support)
+* PHP SOAP Extension (for SOAP support)
+* PHP XML Extension (for SOAP support)
+
 # Install
 
 Download Zip or git clone.

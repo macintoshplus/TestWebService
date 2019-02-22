@@ -7,18 +7,16 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Jean-Baptiste Nahan",
-            "email": "macintoshplus@nahan.fr",
-            "homepage": "http://nahan.fr"
+            "name": "Macintoshplus",
+            "email": "macintoshplus@mactronique.fr"
         }
     ],
-	"autoload": {
+"autoload": {
         "psr-4": {
             "Mactronique\\TestWs\\": "src/"
         }
     },
     "bin": ["TestWebService"],
-    
     "require": {
         "php": ">=7.1",
         "symfony/console": "^3.0 || ^4.0",

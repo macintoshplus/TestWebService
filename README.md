@@ -89,4 +89,15 @@ php ./TestWebService run myWebServiceToTest
 
 # Retreive data from InfluxDb
 
-You can use Grafana for display datas stored into InfluxDB database.
+You can use [Grafana](https://grafana.com/) for display datas stored into InfluxDB database.
+
+
+# Contribute
+
+If you need help or if you have a bug or error, open an issue.
+
+If you want a new feature or change a feature, please open an issue or submit a pull request.
+
+# Feeadback
+
+I'm need feedback (good or bad) for your usage of this tool. You can send me your feed back by opening an issue.

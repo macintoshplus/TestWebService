@@ -1,32 +1,38 @@
 {
-    "name": "matronique/test-webservice",
-    "type": "library",
-    "description": "This application can test web service from cli",
-    "keywords": ["webservice", "tests", "soap"],
-    "homepage": "https://github.com/macintoshplus/TestWebService",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Macintoshplus",
-            "email": "macintoshplus@mactronique.fr"
-        }
-    ],
-"autoload": {
-        "psr-4": {
-            "Mactronique\\TestWs\\": "src/"
-        }
-    },
-    "bin": ["TestWebService"],
-    "require": {
-        "php": ">=7.1",
-        "symfony/console": "^3.0 || ^4.0",
-        "symfony/yaml": "^3.0 || ^4.0",
-        "symfony/config": "^3.0 || ^4.0",
-        "symfony/var-dumper": "^3.0 || ^4.0",
-        "guzzlehttp/guzzle": "^6.2",
-        "influxdb/influxdb-php": "^1.14"
-    },
-    "require-dev": {
-        "atoum/atoum": "^3.0"
+  "name": "matronique/test-webservice",
+  "type": "library",
+  "description": "This application can test web service from cli",
+  "keywords": [
+    "webservice",
+    "tests",
+    "soap"
+  ],
+  "homepage": "https://github.com/macintoshplus/TestWebService",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Macintoshplus",
+      "email": "macintoshplus@mactronique.fr"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Mactronique\\TestWs\\": "src/"
+    }
+  },
+  "bin": [
+    "TestWebService"
+  ],
+  "require": {
+    "php": ">=7.1",
+    "symfony/console": "^3.0 || ^4.0",
+    "symfony/yaml": "^3.0 || ^4.0",
+    "symfony/config": "^3.0 || ^4.0",
+    "symfony/var-dumper": "^3.0 || ^4.0",
+    "guzzlehttp/guzzle": "^6.2",
+    "influxdb/influxdb-php": "^1.14"
+  },
+  "require-dev": {
+    "atoum/atoum": "^3.0"
+  }
 }

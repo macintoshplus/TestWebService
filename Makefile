@@ -9,13 +9,12 @@ console:
 
 
 composer.lock: composer.json composer.phar
-	composer self-update
-	$(tool) bash -ci 'phpdismod -v ALL -s ALL xdebug && composer update --no-scripts --optimize-autoloader $(lib)'
+	$(tool) bash -ci 'phpdismod -v ALL -s ALL xdebug && php composer.phar update --no-scripts --optimize-autoloader $(lib)'
 	$(tool) bash -ci 'chown -R $(stat -c "%u" /sources):$(stat -c "%g" /sources) /sources'
 
 vendor: composer.lock
 	composer self-update
-	$(tool) bash -ci 'phpdismod -v ALL -s ALL xdebug && composer install --no-scripts --optimize-autoloader'
+	$(tool) bash -ci 'phpdismod -v ALL -s ALL xdebug && php composer.phar install --no-scripts --optimize-autoloader'
 	$(tool) bash -ci 'chown -R $(stat -c "%u" /sources):$(stat -c "%g" /sources) /sources'
 
 composer.phar:

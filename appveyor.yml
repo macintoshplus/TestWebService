@@ -66,6 +66,20 @@ install:
     - xcopy /Y /E /I . c:\tools\app
     - xcopy /Y /E /I c:\tools\app %APPVEYOR_BUILD_FOLDER%\artefacts\app
     - xcopy /Y /E /I c:\tools\php %APPVEYOR_BUILD_FOLDER%\artefacts\php
+    - cd %APPVEYOR_BUILD_FOLDER%\artefacts\app
+    - appveyor-retry composer install --no-progress --profile --no-dev -o
+    - cd %APPVEYOR_BUILD_FOLDER%\artefacts\php
+    - del /Y ext\php_xdebug.dll
+    - del /Y php.ini
+    - copy php.ini-production php.ini-dist /Y
+    - echo date.timezone="UTC" >> php.ini-dist
+    - echo extension_dir=ext >> php.ini-dist
+    - echo extension=php_curl.dll >> php.ini-dist
+    - echo extension=php_soap.dll >> php.ini-dist
+    - echo extension=php_openssl.dll >> php.ini-dist
+    - echo extension=php_mbstring.dll >> php.ini-dist
+    - echo extension=php_fileinfo.dll >> php.ini-dist
+    - cd %APPVEYOR_BUILD_FOLDER%
     - IF "%APPVEYOR_REPO_TAG_NAME%"=="" appveyor SetVariable -Name APPVEYOR_REPO_TAG_NAME -Value %APPVEYOR_REPO_BRANCH%-%APPVEYOR_REPO_COMMIT:~0,8%
 
 ## Run the actual test

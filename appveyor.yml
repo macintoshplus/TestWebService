@@ -58,13 +58,13 @@ install:
     - IF %PHP%==1 echo zend_extension=php_xdebug.dll >> php.ini
     - IF %PHP%==1 echo @php %%~dp0composer.phar %%* > composer.bat
     - appveyor-retry appveyor DownloadFile https://getcomposer.org/composer.phar
-    - xcopy /Y /E /I . %APPVEYOR_BUILD_FOLDER%\artefacts\php
     - cd %APPVEYOR_BUILD_FOLDER%
     - IF %dependencies%==lowest appveyor-retry composer update --prefer-lowest --no-progress --profile -n
     - IF %dependencies%==current appveyor-retry composer install --no-progress --profile -o
     - IF %dependencies%==highest appveyor-retry composer update --no-progress --profile -n
     - composer show
-    - xcopy /Y /E /I /EXCLUDE:\artefacts\ . %APPVEYOR_BUILD_FOLDER%\artefacts\app
+    - xcopy /Y /E /I . c:\tools\app
+    - xcopy /Y /E /I c:\tools %APPVEYOR_BUILD_FOLDER%\artefacts
 
 ## Run the actual test
 test_script:

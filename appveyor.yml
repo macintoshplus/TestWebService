@@ -69,8 +69,8 @@ install:
     - cd %APPVEYOR_BUILD_FOLDER%\artefacts\app
     - appveyor-retry composer install --no-progress --profile --no-dev -o
     - cd %APPVEYOR_BUILD_FOLDER%\artefacts\php
-    - del /Y ext\php_xdebug.dll
-    - del /Y php.ini
+    - del /Q ext\php_xdebug.dll
+    - del /Q php.ini
     - copy php.ini-production php.ini-dist /Y
     - echo date.timezone="UTC" >> php.ini-dist
     - echo extension_dir=ext >> php.ini-dist

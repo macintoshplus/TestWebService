@@ -61,11 +61,18 @@ install:
     - appveyor-retry appveyor DownloadFile https://getcomposer.org/composer.phar
     - cd %APPVEYOR_BUILD_FOLDER%
     - IF %dependencies%==lowest appveyor-retry composer update --prefer-lowest --no-progress --profile -n
-    - IF %dependencies%==current appveyor-retry composer install --no-progress --profile
+    - IF %dependencies%==current appveyor-retry composer install --no-progress --profile -o
     - IF %dependencies%==highest appveyor-retry composer update --no-progress --profile -n
     - composer show
+    - xcopy /Y /E /I . c:\tools\app
 
 ## Run the actual test
 test_script:
     - cd %APPVEYOR_BUILD_FOLDER%
     - vendor/bin/atoum
+
+
+artifacts:
+  - path: c:\tools
+    name: TestWebService-%APPVEYOR_REPO_TAG_NAME%-%PHP_VER_TARGET%
+    type: zip

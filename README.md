@@ -9,7 +9,7 @@ Allow check WebService Soap and HTTP (REST API) and store result into File or in
 # Requirements
 
 * PHP 7.1+
-* PHP Curl Extension (with the CA-Bundle INI paramater defined)
+* PHP Curl Extension (with the `curl.cainfo` INI parameter defined)
 * PHP OpenSSL Extension (for HTTPS support)
 * PHP SOAP Extension (for SOAP support)
 * PHP XML Extension (for SOAP support)

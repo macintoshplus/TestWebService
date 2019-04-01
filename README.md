@@ -23,6 +23,10 @@ open terminal and install dependency
 $ composer install -o
 ```
 
+> Windows install: The [Appveyor CI build](https://ci.appveyor.com/project/macintoshplus/testwebservice) artfact contains an packaged PHP for each version with a configuration file `php.ini-dist` ready to use.
+> You can use this for install and test out of box.
+> Caution, the PHP version is not necessary the last, update it.
+
 # Configure
 
 create file named `webservices.yml` in root folder.

@@ -3,6 +3,7 @@
 Allow check WebService Soap and HTTP (REST API) and store result into File or influxDB.
 
 [![Build Status](https://travis-ci.org/macintoshplus/TestWebService.svg?branch=master)](https://travis-ci.org/macintoshplus/TestWebService)
+[![Build status](https://ci.appveyor.com/api/projects/status/qw892qjut5dney8b?svg=true)](https://ci.appveyor.com/project/macintoshplus/testwebservice)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/macintoshplus/TestWebService/blob/master/LICENSE)
 
 # Requirements

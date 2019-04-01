@@ -79,6 +79,8 @@ install:
     - echo extension=php_openssl.dll >> php.ini-dist
     - echo extension=php_mbstring.dll >> php.ini-dist
     - echo extension=php_fileinfo.dll >> php.ini-dist
+    - copy /Y c:\tools\curl\bin\curl-ca-bundle.crt .\curl-ca-bundle.crt
+    - echo curl.cainfo=curl-ca-bundle.crt >> php.ini-dist
     - cd %APPVEYOR_BUILD_FOLDER%
     - IF "%APPVEYOR_REPO_TAG_NAME%"=="" appveyor SetVariable -Name APPVEYOR_REPO_TAG_NAME -Value %APPVEYOR_REPO_BRANCH%-%APPVEYOR_REPO_COMMIT:~0,8%
 

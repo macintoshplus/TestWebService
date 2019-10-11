@@ -4,7 +4,7 @@
  * This file is part of TestWebService package.
  *
  * @author Jean-Baptiste Nahan <macintoshplus@users.noreply.github.com>
- * @copyright 2016 - Jean-Baptiste Nahan
+ * @copyright 2016-2019 - Jean-Baptiste Nahan
  * @license MIT
  */
 

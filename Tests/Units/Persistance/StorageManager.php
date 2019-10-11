@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Macintoshplus (c) 2018
+ * @copyright 2016-2019 - Jean-Baptiste Nahan
  * Added by : Macintoshplus at 15/06/18 22:19
  */
 

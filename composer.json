@@ -33,6 +33,6 @@
     "influxdb/influxdb-php": "^1.14"
   },
   "require-dev": {
-    "atoum/atoum": "^3.0"
+    "atoum/atoum": "^3.0 || dev-master"
   }
 }
